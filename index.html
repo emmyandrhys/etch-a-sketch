@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang='en-us'>
+<head>
+    <title>Sketch a Squiggle</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <div id='titleBox'>Sketch a Squiggle</div>
+    <div id='main'></div>
+    <div id='controlbox' class="controls"></div>
+        <label for="width">Length and Width:</label>
+        <input id="width" type="range" name="width" min="10" max="100" value="20">
+    
+        <label for="base">Sketch Color:</label>
+        <input id="base" type="color" name="base" value="#000000">
+      </div>
+
+
+<style>
+      :root {
+      --base: red;
+    }
+    body {
+        display: grid;
+        grid-template-columns: 10vw 95vh auto;       
+    }
+    div {
+        padding: 0;
+    }
+    #titleBox {
+        width: 10vw;
+        grid-column: 1;
+    }
+    #main {
+        display: flexbox;
+        width: 95vh;
+        grid-column: 2;
+    }
+    #controlbox {
+        grid-column: 3;
+        display: flexbox;
+        flex-direction: column;
+    }
+    .row {
+        display: flex; 
+        background-color: lightgrey;
+        }
+    .hover {
+        background-color: var(--base);
+    }
+    .cell {
+        border: 1px solid black;}
+
+</style>
+<script>
+    // Set up constants and variables
+    const maindiv = document.getElementById('main');
+    let width = document.getElementById('width').value;
+    let cellheight = 95/width;
+    let rowwidth = width * cellheight;
+    let rows = document.getElementsByClassName('row');
+
+    //function to trigger color change in cells
+    function colorCell(e) {
+        console.log('this far')
+        this.classList.toggle('.hover');
+    }
+
+    //functions to set up the grid out of rows and columns
+    //create rows
+    function makeRows(width) {
+        for (var r = 0; r < width; r++) {
+            let row = document.createElement('div');
+            maindiv.appendChild(row).className = 'row';
+            row.setAttribute('style',`width:${rowwidth}vh; height:${cellheight}vh`)
+        }
+    };
+
+    //create columns
+    function makeColumns(width) {
+        for (var c = 0; c < rows.length; c++) {
+            for (var i = 0; i < width; i++) {
+                let cell = document.createElement('div'); 
+                rows[i].appendChild(cell).className='cell';
+                cell.setAttribute('style',`width:${cellheight}vh; height:${cellheight}vh;`)
+                cell.onmouseover = function() {cell.classList.toggle('hover'); console.log('this far')};
+            };
+        };
+    };
+    //function to create grid
+    function createGrid(width) {
+        makeRows(width);
+        makeColumns(width);
+    }
+    
+    //create actual grid
+    maindiv.appendChild = createGrid(16, 16)
+
+    //functions for managing the controls
+    const shadecolor = document.getElementById('base');
+    console.log(shadecolor)
+    function sketchColor() {
+        document.documentElement.style.setProperty('--base', this.value)
+    }
+    shadecolor.addEventListener('change', sketchColor);
+    shadecolor.addEventListener('mousemove', sketchColor)
+    shadecolor.onmousemove = sketchColor();
+    shadecolor.onchange = sketchColor();
+    /* const inputs = document.querySelectorAll('.controls input');
+
+    function handleUpdate() {
+      document.documentElement.style.setProperty(`--${this.name}`, this.value);
+    }
+
+    inputs.forEach(input => input.addEventListener('change', handleUpdate));
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
+    */
+</script>
+</body>
+</html>
